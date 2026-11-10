@@ -60,6 +60,8 @@ const check = (value, min, max, integer = true, optional = false) => {
 assert.equal(check('1', 1, 10).ok, true, 'minimum boundary accepted');
 assert.equal(check('10', 1, 10).ok, true, 'maximum boundary accepted');
 assert.equal(check('0', 1, 10).ok, false, 'below-minimum rejected');
+assert.equal(check('0', 0, 1000).ok, true, 'explicit zero result accepted');
+assert.equal(check('', 0, 1000).ok, false, 'blank is not silently converted to zero');
 assert.equal(check('11', 1, 10).ok, false, 'above-maximum rejected');
 assert.equal(check('2.5', 1, 10).ok, false, 'fraction rejected for integer control');
 assert.equal(check('2.5', 1, 10, false).ok, true, 'decimal accepted for weight');
