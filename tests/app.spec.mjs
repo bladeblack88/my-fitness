@@ -78,3 +78,16 @@ test('check-in validates weight boundaries and saves decimal values', async ({ p
   const db = await page.evaluate(() => JSON.parse(localStorage.getItem('mf2_db')));
   expect(db.profiles[db.active].weight).toBe(78.4);
 });
+
+test('malformed backup is rejected without overwriting local data', async ({ page }) => {
+  const before = await page.evaluate(() => localStorage.getItem('mf2_db'));
+  await page.locator('[data-tab="profile"]').click();
+  await page.locator('#tab-profile details').last().locator('summary').click();
+  await page.locator('#backupFile').setInputFiles({
+    name: 'broken-backup.json',
+    mimeType: 'application/json',
+    buffer: Buffer.from(JSON.stringify({ app: 'MY FITNESS', data: { profiles: [], logs: [] } }))
+  });
+  await expect(page.getByRole('status')).toContainText('Не удалось прочитать резервную копию');
+  await expect.poll(() => page.evaluate(() => localStorage.getItem('mf2_db'))).toBe(before);
+});
