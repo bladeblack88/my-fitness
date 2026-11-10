@@ -14,7 +14,7 @@ console.log('PASS: HTML smoke checks');
 console.log('PASS: inline JavaScript syntax');
 console.log('PASS: local storage and offline font checks');
 const svgStart = html.indexOf('function svgArt(type)');
-const svgEnd = html.indexOf('\\nfunction renderWorkout()', svgStart);
+const svgEnd = html.indexOf('\nfunction renderWorkout()', svgStart);
 assert.ok(svgStart >= 0 && svgEnd > svgStart, 'exercise illustration renderer exists');
 const svgRenderer = new Function(html.slice(svgStart, svgEnd) + '; return svgArt;')();
 for (const type of ['push', 'squat', 'bridge', 'bird', 'scap']) {
