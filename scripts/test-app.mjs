@@ -37,7 +37,9 @@ assert.ok(html.includes("oninput=\"$('sessionRpeValue').textContent=this.value\"
 assert.ok(html.includes("oninput=\"$('reviewFatigueValue').textContent=this.value\""), 'fatigue slider updates its visible value');
 assert.ok(html.includes("water:$('waterOn').checked") && html.includes("training:$('trainingOn').checked"), 'checkbox states are saved');
 assert.ok(html.includes("$('waterOn').checked=r.water!==false") && html.includes("$('trainingOn').checked=r.training!==false"), 'checkbox states are restored');
-assert.match(html, /function saveExerciseResult[\s\S]*?readNumber\('actual-'\+id,1,1000,true,false\)/, 'exercise result is range-checked');
+assert.ok(html.includes("onclick=\"$('backupFile').click()\"") && html.includes('id="backupFile"'), 'backup restore button opens its file picker');
+assert.match(html, /onchange="importBackup\(event\)"/, 'backup file input is wired');
+assert.match(html, /function saveExerciseResult[\s\S]*?readNumber\('actual-'\+id,0,1000,true,false\)/, 'exercise result is range-checked and permits zero');
 assert.match(html, /function saveProfile[\s\S]*?readNumber\('pAge',13,100/, 'profile age is range-checked');
 assert.match(html, /function saveCheckin[\s\S]*?readNumber\('quickWeight',30,300/, 'weigh-in is range-checked');
 assert.match(html, /function finishWorkout[\s\S]*?readNumber\('sessionRpe',1,10/, 'session RPE is range-checked');
