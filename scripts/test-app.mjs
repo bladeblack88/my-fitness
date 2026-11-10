@@ -6,6 +6,7 @@ const html = await readFile('index.html', 'utf8');
 assert.match(html, /<html lang="ru">/i, 'Russian document language');
 assert.match(html, /localStorage/, 'local device storage is present');
 assert.match(html, /Notification/, 'notification feature code is present');
+assert.match(html, /function showToast[\\s\\S]*?setAttribute\('role','status'\)[\\s\\S]*?setAttribute\('aria-live','polite'\)/, 'status messages are announced accessibly');
 assert.doesNotMatch(html, /fonts\.googleapis\.com|fonts\.gstatic\.com/i, 'no external Google Fonts requests');
 
 const scriptMatches = [...html.matchAll(/<script\b[^>]*>([\s\S]*?)<\/script>/gi)];
