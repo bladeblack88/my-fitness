@@ -8,6 +8,8 @@ on:
       - 'package-lock.json'
       - 'capacitor.config.json'
       - 'scripts/**'
+      - 'tests/**'
+      - 'playwright.config.mjs'
       - '.github/workflows/android.yml'
   workflow_dispatch:
 permissions:
