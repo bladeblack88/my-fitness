@@ -1,0 +1,9 @@
+{
+  "appId": "com.bladeblack88.myfitness",
+  "appName": "MY FITNESS",
+  "webDir": "www",
+  "bundledWebRuntime": false,
+  "android": {
+    "allowMixedContent": false
+  }
+}
