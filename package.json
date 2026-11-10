@@ -6,13 +6,15 @@
   "scripts": {
     "prepare:web": "node scripts/prepare-web.mjs",
     "test": "node scripts/test-app.mjs",
-    "build:android": "npm run prepare:web && cap sync android"
+    "build:android": "npm run prepare:web && cap sync android",
+    "test:e2e": "playwright test"
   },
   "dependencies": {
     "@capacitor/android": "6.2.1",
     "@capacitor/core": "6.2.1"
   },
   "devDependencies": {
-    "@capacitor/cli": "6.2.1"
+    "@capacitor/cli": "6.2.1",
+    "@playwright/test": "1.56.1"
   }
 }
