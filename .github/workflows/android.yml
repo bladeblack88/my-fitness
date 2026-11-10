@@ -32,7 +32,7 @@ jobs:
       - name: Run app tests
         run: npm test
       - name: Generate Android project and sync assets
-        run: npx cap add android && npm run build:android
+        run: npm run prepare:web && npx cap add android && npm run build:android
       - name: Build debug APK
         working-directory: android
         run: ./gradlew assembleDebug --no-daemon
