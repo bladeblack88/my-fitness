@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#10101c"><title>MY FITNESS — твой персональный тренер</title>
+<meta name="theme-color" content="#10130f"><title>MY FITNESS — твой персональный тренер</title>
 <style>
 /* Offline-first: use system fonts; no external font requests. */
 :root{--bg:#0d0d18;--panel:#191929;--panel2:#24243a;--ink:#f8f7ff;--muted:#aaa9c2;--yellow:#ffd447;--pink:#ff5478;--blue:#56c9ff;--green:#65e6a5;--line:#37364f}
@@ -83,7 +83,7 @@ function escapeHTML(value){return String(value??'').replace(/[&<>"']/g,c=>({'&':
 function exportBackup(){let payload={app:'MY FITNESS',version:1,exportedAt:new Date().toISOString(),data:db},blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='my-fitness-backup-'+today()+'.json';document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);showToast('Резервная копия подготовлена')}
 function importBackup(event){let file=event.target.files&&event.target.files[0];if(!file)return;let reader=new FileReader();reader.onload=()=>{try{let payload=JSON.parse(reader.result),data=payload.data;if(payload.app!=='MY FITNESS'||!data||typeof data.profiles!=='object'||!Array.isArray(data.logs))throw new Error('Неверный формат');if(!confirm('Заменить текущие профили и историю данными из резервной копии? Сначала скачай копию текущих данных, если хочешь их сохранить.'))return;db={profiles:data.profiles,active:data.active||Object.keys(data.profiles)[0]||null,logs:data.logs,reminders:data.reminders||{water:true,waterEvery:60,training:true,trainingTime:'18:00'}};persist();init();showToast('Данные восстановлены')}catch(e){showToast('Не удалось прочитать резервную копию')}finally{event.target.value=''}};reader.readAsText(file)}
 function profile(){return db.profiles[db.active]||null}
-function showToast(s){let t=document.createElement('div');t.className='toast';t.textContent=s;document.body.append(t);setTimeout(()=>t.remove(),2400)}
+function showToast(s){let t=document.createElement('div');t.className='toast';t.setAttribute('role','status');t.setAttribute('aria-live','polite');t.textContent=s;document.body.append(t);setTimeout(()=>t.remove(),2400)}
 function showTab(t){document.querySelectorAll('.tab').forEach(x=>x.classList.add('hidden'));$('tab-'+t).classList.remove('hidden');document.querySelectorAll('.nav button').forEach(b=>b.classList.toggle('active',b.dataset.tab===t||((t==='review'||t==='reminders')&&b.dataset.tab==='profile')));if(t==='home')renderHome();if(t==='workout')renderWorkout();if(t==='progress')renderProgress();if(t==='profile')fillProfile();if(t==='reminders')fillReminders()}
 function updateProfileSelect(){let s=$('profileSelect');s.innerHTML='';Object.values(db.profiles).forEach(p=>{let o=document.createElement('option');o.value=p.id;o.textContent=p.name||'Спортсмен';s.append(o)});if(db.active)s.value=db.active;s.onchange=()=>{db.active=s.value;persist();fillProfile();fillReminders();renderHome();renderProgress();showToast('Профиль переключён')}}
 function newProfile(){let id='u'+Date.now();db.profiles[id]={id,name:'',age:'',height:'',weight:'',goal:'Общая физическая форма',experience:'Новичок',days:3,minutes:30,equipment:'Только собственный вес',limits:'',created:today()};db.active=id;persist();updateProfileSelect();fillProfile();showTab('profile')}
