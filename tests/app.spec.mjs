@@ -11,8 +11,8 @@ test('navigation tabs open their screens', async ({ page }) => {
 test('exercise result, timer controls and workout completion work', async ({ page }) => {
   await page.locator('[data-tab="workout"]').click();
   await page.locator('#actual-push').fill('12');
-  await page.locator('[data-ex="push"] .resultline .btn').click();
-  await expect(page.getByRole('status')).toContainText('Сохранено');
+  await page.locator('[data-ex="push"] .resultline').getByRole('button', { name: 'Сохранить результат' }).click();
+  await expect(page.locator('.toast')).toContainText('Сохранено');
   let db = await page.evaluate(() => JSON.parse(localStorage.getItem('mf2_db')));
   expect(db.logs.some(x => x.type === 'set' && x.exercise === 'push' && x.value === 12)).toBeTruthy();
   const tools = page.locator('[data-ex="push"] details.exercise-tools');
@@ -90,4 +90,15 @@ test('malformed backup is rejected without overwriting local data', async ({ pag
   });
   await expect(page.getByRole('status')).toContainText('Не удалось прочитать резервную копию');
   await expect.poll(() => page.evaluate(() => localStorage.getItem('mf2_db'))).toBe(before);
+});
+
+
+test('home screen loads without uncaught errors or broken images', async ({ page }) => {
+  const errors = [];
+  page.on('pageerror', error => errors.push(error.message));
+  await page.reload();
+  await expect(page.locator('#tab-home')).toBeVisible();
+  const brokenImages = await page.locator('img').evaluateAll(nodes => nodes.filter(img => !img.complete || img.naturalWidth === 0).map(img => img.currentSrc || img.src));
+  expect(errors, 'uncaught browser errors').toEqual([]);
+  expect(brokenImages, 'broken images').toEqual([]);
 });
